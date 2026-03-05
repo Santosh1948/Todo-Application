@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TodoApp</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@200..900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<main class="wrap">
+    <header class="hero">
+        <div>
+            <h1>TodoApp <span class="glow">✨</span></h1>
+<!--            <p class="sub">Clean • Fast • No Bootstrap</p>-->
+        </div>
+        <div class="badge" th:text="'Total: ' + ${#lists.size(todos)}">Total: 0</div>
+    </header>
+
+    <section class="card">
+        <form class="add" th:action="@{/todos}" method="post">
+            <input name="title" type="text" placeholder="Write task and press Enter..." autocomplete="off" required>
+            <button type="submit">Add</button>
+        </form>
+
+        <ul class="list">
+            <li class="item" th:each="t : ${todos}">
+                <div class="left">
+                    <span class="dot" th:classappend="${t.completed} ? 'done' : ''"></span>
+                    <span class="text" th:classappend="${t.completed} ? 'done' : ''" th:text="${t.title}">Task</span>
+                </div>
+
+                <div class="actions">
+                    <form th:action="@{'/todos/' + ${t.id} + '/toggle'}" method="post">
+                        <button class="btn ghost" type="submit" th:text="${t.completed} ? 'Undo' : 'Done'">Done</button>
+                    </form>
+
+                    <form th:action="@{'/todos/' + ${t.id} + '/delete'}" method="post">
+                        <button class="btn danger" type="submit">Delete</button>
+                    </form>
+                </div>
+            </li>
+
+            <li class="empty" th:if="${#lists.isEmpty(todos)}">
+                No tasks yet. Add your first one 👆
+            </li>
+        </ul>
+    </section>
+</main>
+</body>
+</html>
